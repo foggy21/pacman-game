@@ -20,7 +20,7 @@
         
     }
     
-    private static bool HoldInput(char[,] map, ref int positionX, ref int positionY, char entityPlayer) 
+    private static void HoldInput(char[,] map, ref int positionX, ref int positionY, char entityPlayer) 
     {
         ConsoleKeyInfo keyInfo = Console.ReadKey();
         int oldPositionX = positionX;
