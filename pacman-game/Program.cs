@@ -50,9 +50,7 @@
             DeleteEntity(positionX, positionY);
             positionX = oldPositionX;
             positionY = oldPositionY;
-            return true;
         }
-        return false;
     }
 
     private static void DeleteEntity(int x, int y)
