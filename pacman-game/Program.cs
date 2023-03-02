@@ -1,4 +1,6 @@
-﻿internal class Program
+﻿using System;
+
+internal class Program
 {
     private static void Main(string[] args)
     {
@@ -9,12 +11,12 @@
         int countOfEnemies;
 
         char player = '@';
-        char enemy = '^';
 
         char[,] map = ReadMap("map.txt");
         int[,] positionsOfEnemies = ReadPositionsOfEnemies("positions of enemies.txt", out countOfEnemies);
-
+        
         DrawMap(map, ConsoleColor.Blue);
+        DrawEnemies(map, positionsOfEnemies);
         DrawEntity(map, playerPositionX, playerPositionY, player, ConsoleColor.Yellow);
 
         while (gameLoop)
@@ -45,7 +47,8 @@
                 oldPositionX++;
                 break;
             default:
-                break;
+                Console.Write("\b \b");
+                return;
         }
 
         if (map[oldPositionX, oldPositionY] != '#')
@@ -60,7 +63,7 @@
     private static void DeleteEntity(int x, int y)
     {
         Console.SetCursorPosition(x+1, y);
-        Console.Write("\b ");
+        Console.Write("\b \b");
     }
 
     private static void DrawEntity(char[,] map, int x, int y, char entity, ConsoleColor color = ConsoleColor.White)
@@ -75,6 +78,19 @@
         }
 
         Console.ForegroundColor = defaultColor;
+    }
+
+    private static void DrawEnemies(char[,] map, int[,] positionsOfEnemies)
+    {
+        char enemy = '^';
+
+        for (int x = 0; x < positionsOfEnemies.GetLength(0); ++x)
+        {
+            int enemyPosX = positionsOfEnemies[x, 0];
+            int enemyPosY = positionsOfEnemies[x, 1];
+
+            DrawEntity(map, enemyPosX, enemyPosY, enemy, ConsoleColor.Red);
+        }
     }
 
     private static void DrawMap(char[,] map, ConsoleColor color = ConsoleColor.White)
