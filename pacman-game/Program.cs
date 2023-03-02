@@ -19,16 +19,24 @@ internal class Program
         DrawEnemies(map, positionsOfEnemies);
         DrawEntity(map, playerPositionX, playerPositionY, player, ConsoleColor.Yellow);
 
+        Task.Run(() =>
+        {
+            while(gameLoop)
+                HoldInput(map, ref playerPositionX, ref playerPositionY, player);
+        });
+
         while (gameLoop)
         {
-            HoldInput(map, ref playerPositionX, ref playerPositionY, player);
+            MoveEnemies(map, positionsOfEnemies);
+            DrawEnemies(map, positionsOfEnemies);
+            Thread.Sleep(500);
         }
-        
     }
     
     private static void HoldInput(char[,] map, ref int positionX, ref int positionY, char entityPlayer) 
     {
         ConsoleKeyInfo keyInfo = Console.ReadKey();
+
         int oldPositionX = positionX;
         int oldPositionY = positionY;
 
@@ -57,6 +65,27 @@ internal class Program
             DeleteEntity(positionX, positionY);
             positionX = oldPositionX;
             positionY = oldPositionY;
+        }
+    }
+
+    private static void MoveEnemies(char[,] map, int[,] positionsOfEnemies) 
+    {
+        Random randomDirection = new Random();
+        int directionX, directionY;
+        int newPositionX, newPositionY;
+        for (int x = 0; x < positionsOfEnemies.GetLength(0); ++x)
+        {
+            directionX = randomDirection.Next(-1, 2);
+            directionY = randomDirection.Next(-1, 2);
+            newPositionX = positionsOfEnemies[x, 0] + directionX;
+            newPositionY = positionsOfEnemies[x, 1] + ((directionX != 0) ? directionY * 0 : directionY);
+
+            if (map[newPositionX, newPositionY] != '#')
+            {
+                DeleteEntity(positionsOfEnemies[x, 0], positionsOfEnemies[x, 1]);
+                positionsOfEnemies[x, 0] = newPositionX;
+                positionsOfEnemies[x, 1] = newPositionY;
+            }
         }
     }
 
