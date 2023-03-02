@@ -6,9 +6,13 @@
 
         bool gameLoop = true;
         int playerPositionX = 1, playerPositionY = 1;
+        int countOfEnemies;
+
         char player = '@';
+        char enemy = '^';
 
         char[,] map = ReadMap("map.txt");
+        int[,] positionsOfEnemies = ReadPositionsOfEnemies("positions of enemies.txt", out countOfEnemies);
 
         DrawMap(map, ConsoleColor.Blue);
         DrawEntity(map, playerPositionX, playerPositionY, player, ConsoleColor.Yellow);
@@ -98,6 +102,22 @@
                 map[x, y] = lines[y][x];
 
         return map;
+    }
+
+    private static int[,] ReadPositionsOfEnemies(string path, out int countOfEnemies)
+    {
+        string[] file = File.ReadAllLines(path);
+        countOfEnemies = file.Length;
+        int[,] positionOfEnemies = new int[countOfEnemies, 2];
+
+        int x = 0;
+        foreach(string line in file)
+        {
+            string[] position = line.Split(' ');
+            positionOfEnemies[x, 0] = Convert.ToInt32(position[0]);
+            positionOfEnemies[x++, 1] = Convert.ToInt32(position[1]);
+        }
+        return positionOfEnemies;
     }
 
     private static int GetMaxLengthOfRow(string[] rows)
